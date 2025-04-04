@@ -1,9 +1,15 @@
 body {
-    font-family: sans-serif;
     margin: 0;
     padding: 0;
+    font-family: sans-serif;
+    background: #f4f4f4;
 }
 
 .container {
-    border: 1px solid #333;
+    border: 1px solid #ccc;
+}
+
+.innerRect {
+    stroke: #333;
+    stroke-width: 2;
 }
