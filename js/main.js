@@ -18,7 +18,7 @@ function setMap() {
         console.log("TopoJSON:", germany);
 
         // convert TopoJSON to GeoJSON
-        var geojsonData = topojson.feature(germany, germany.objects.YOUR_OBJECT_NAME);
+        var geojsonData = topojson.feature(germany, germany.objects.de);
         console.log("Converted GeoJSON:", geojsonData);
     }
 }
