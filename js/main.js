@@ -38,7 +38,7 @@ window.onload = function() {
 
     // Scales
     var x = d3.scaleLinear()
-        .range([90, 840])  // Increased max to fit labels
+        .range([90, 880])  // Increased max to fit labels
         .domain([0, cityPop.length - 1]);
 
     var y = d3.scaleLinear()
