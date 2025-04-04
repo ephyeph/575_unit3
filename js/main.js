@@ -28,6 +28,7 @@ function setMap() {
         d3.csv("data/unitsData.csv"),
         d3.json("data/de.topojson")
     ];
+    
 
     Promise.all(promises).then(callback);
 
@@ -37,6 +38,24 @@ function setMap() {
 
         // Convert TopoJSON to GeoJSON
         var geojsonData = topojson.feature(germany, germany.objects.de).features;
+
+        // --- Graticule generator ---
+        var graticule = d3.geoGraticule().step([5, 5]);
+
+        // Draw graticule background
+        var gratBackground = map.append("path")
+            .datum(graticule.outline())
+            .attr("class", "gratBackground")
+            .attr("d", path);
+
+        // Draw graticule lines
+        var gratLines = map.selectAll(".gratLines")
+            .data(graticule.lines())
+            .enter()
+            .append("path")
+            .attr("class", "gratLines")
+            .attr("d", path);
+
 
         // Draw German states
         map.selectAll(".state")
