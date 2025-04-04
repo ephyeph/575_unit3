@@ -10,6 +10,5 @@ body {
 }
 
 .innerRect {
-    stroke: #333;
-    stroke-width: 2;
+    stroke: none;
 }
