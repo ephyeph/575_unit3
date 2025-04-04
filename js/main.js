@@ -5,25 +5,52 @@ window.onload = function() {
     var w = 900,
         h = 500;
 
-    // Container block (SVG)
-    var container = d3.select("body") // Select the <body> element
-        .append("svg")                // Append <svg>
-        .attr("width", w)            // Set width
-        .attr("height", h)           // Set height
-        .attr("class", "container")  // Assign class name for styling
-        .style("background-color", "rgba(0,0,0,0.2)"); // Light gray background
+    // SVG container block
+    var container = d3.select("body")
+        .append("svg")
+        .attr("width", w)
+        .attr("height", h)
+        .attr("class", "container")
+        .style("background-color", "rgba(0,0,0,0.2)");
 
-    // Inner rectangle block
-    var innerRect = container.append("rect") // Append rectangle inside <svg>
-        .datum(400)                          // Bind a datum (400)
-        .attr("width", function(d) {
-            return d * 2;                    // Width = 800
+    // Inner white rectangle block
+    var innerRect = container.append("rect")
+        .datum(400)
+        .attr("width", function(d) { return d * 2; }) // 800
+        .attr("height", function(d) { return d; })    // 400
+        .attr("class", "innerRect")
+        .attr("x", 50)
+        .attr("y", 50)
+        .style("fill", "#FFFFFF");
+
+    // City population array
+    var cityPop = [
+        { city: 'Madison', population: 233209 },
+        { city: 'Milwaukee', population: 594833 },
+        { city: 'Green Bay', population: 104057 },
+        { city: 'Superior', population: 27244 }
+    ];
+
+    // Circle block – data join
+    var circles = container.selectAll(".circles")
+        .data(cityPop)
+        .enter()
+        .append("circle")
+        .attr("class", "circles")
+        .attr("id", function(d) {
+            return d.city;
         })
-        .attr("height", function(d) {
-            return d;                        // Height = 400
+        .attr("r", function(d) {
+            // Calculate radius based on population area
+            var area = d.population * 0.01;
+            return Math.sqrt(area / Math.PI);
         })
-        .attr("class", "innerRect")          // Assign class for styling (optional)
-        .attr("x", 50)                       // Offset from left
-        .attr("y", 50)                       // Offset from top
-        .style("fill", "#FFFFFF");           // Fill color: white
+        .attr("cx", function(d, i) {
+            // Space out circles horizontally using index
+            return 90 + (i * 180);
+        })
+        .attr("cy", function(d) {
+            // Grow circles upward by subtracting from 450
+            return 450 - (d.population * 0.0005);
+        });
 };
