@@ -65,6 +65,18 @@ body {
     fill: none;
     stroke: #999;
     stroke-width: 1px;
+
+
+    /* Animation setup */
+    stroke-dasharray: 1000;
+    stroke-dashoffset: 1000;
+    animation: drawLines 2s ease forwards;
+}
+
+@keyframes drawLines {
+    to {
+        stroke-dashoffset: 0;
+    }
 }
 
 .map {
