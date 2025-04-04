@@ -1,0 +1,17 @@
+id,name,adm1_code,varA,varB,varC,varD,varE
+DEBW,Baden-Württemberg,DEU-1,82,35,75,60,28
+DEBY,Bavaria (Bayern),DEU-2,64,42,81,48,39
+DEBE,Berlin,DEU-3,71,77,92,55,80
+DEBB,Brandenburg,DEU-4,53,49,67,36,52
+DEHB,Bremen,DEU-5,45,38,62,42,36
+DEHH,Hamburg,DEU-6,88,66,89,63,47
+DEHE,Hesse (Hessen),DEU-7,67,53,79,57,65
+DENI,Lower Saxony,DEU-8,59,44,68,51,33
+DEMV,Mecklenburg-Vorpommern,DEU-9,37,29,45,39,41
+DENW,North Rhine-Westphalia,DEU-10,72,59,83,70,55
+DERP,Rhineland-Palatinate,DEU-11,60,41,73,50,38
+DESL,Saarland,DEU-12,44,33,58,46,29
+DESN,Saxony,DEU-13,48,36,65,43,32
+DEST,Saxony-Anhalt,DEU-14,40,30,54,38,27
+DESH,Schleswig-Holstein,DEU-15,50,39,69,49,35
+DETH,Thuringia,DEU-16,46,34,61,40,31
