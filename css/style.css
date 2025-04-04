@@ -1,47 +1,58 @@
+/* General body styling */
 body {
     margin: 0;
     padding: 0;
-    font-family: sans-serif;
-    background: #f4f4f4;
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    background-color: #f5f5f5;
 }
 
-.container {
-    border: 1px solid #ccc;
+/* Main SVG map container */
+.map {
+    display: block;
+    margin: 2rem auto;
+    background-color: #f9f9f9;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
-.title {
-    font-family: sans-serif;
-    font-size: 1.5em;
-    font-weight: bold;
-}
-
-.circles {
-    opacity: 0.85;
+/* Default state styling */
+.state {
+    fill: #e0e0e0;
+    stroke: #333;
     stroke-width: 1px;
+    transition: fill 0.2s ease, stroke 0.2s ease;
 }
 
-.axis path,
-.axis line {
-    fill: none;
-    stroke: black;
-    stroke-width: 1px;
-    shape-rendering: crispEdges;
+/* Hover effect for interactivity */
+.state:hover {
+    fill: #ffcc80;
+    stroke: #ff9800;
+    cursor: pointer;
 }
 
-.axis text {
-    font-family: sans-serif;
+/* Optional: class for highlighting a selected state */
+.state.selected {
+    fill: #f44336;
+    stroke: #b71c1c;
+    stroke-width: 2px;
+}
+
+/* Optional: for future legend box */
+.legend {
     font-size: 0.9em;
+    fill: #333;
 }
 
-.labels {
-    font-size: 0.85em;
-    font-family: sans-serif;
+/* Optional: for labeling features */
+.label {
+    font-size: 12px;
+    fill: #111;
+    pointer-events: none;
 }
 
-.nameLine {
-    font-weight: bold;
-}
-
-.popLine {
-    fill: #555;
+/* Optional: axis or graticule lines */
+.graticule {
+    fill: none;
+    stroke: #ccc;
+    stroke-width: 0.5px;
+    stroke-dasharray: 2,2;
 }
