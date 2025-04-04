@@ -21,7 +21,8 @@ window.onload = function() {
         .attr("class", "innerRect")
         .attr("x", 50)
         .attr("y", 50)
-        .style("fill", "#FFFFFF");
+        .style("fill", "#FFFFFF")
+        .style("stroke", "none");
 
     // City population array
     var cityPop = [
