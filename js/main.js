@@ -1,3 +1,5 @@
+console.log("Lesson 3 script loaded!");
+
 window.onload = function() {
 
     // Dimensions
