@@ -41,6 +41,10 @@
                 germany = data[1];
     
             var geojsonData = topojson.feature(germany, germany.objects.de).features;
+
+            //test
+            console.log("GeoJSON sample:", geojsonData[0].properties);
+
     
             // Add graticule
             setGraticule(map, path);

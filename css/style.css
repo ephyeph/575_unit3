@@ -22,24 +22,11 @@ body {
     stroke-linecap: round;
 }
 
-/* Optional: hover effect */
+/* Hover effect */
 .regions:hover {
     stroke: #ff9800;
     stroke-width: 1.5px;
     cursor: pointer;
-}
-
-/* Optional: for legend */
-.legend {
-    font-size: 0.9em;
-    fill: #333;
-}
-
-/* Optional: labels */
-.label {
-    font-size: 12px;
-    fill: #111;
-    pointer-events: none;
 }
 
 /* Graticule styling */
