@@ -108,12 +108,12 @@
     }
     
     function setEnumerationUnits(geojsonData, map, path, colorScale){
-        map.selectAll(".state")
+        map.selectAll(".region")
             .data(geojsonData)
             .enter()
             .append("path")
             .attr("class", function(d) {
-                return "state " + d.properties.Objectid;
+                return "region" + d.properties.Objectid;
             })
             .attr("d", path)
             .style("fill", function(d){
