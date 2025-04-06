@@ -1,25 +1,23 @@
-// Wrap everything in an IIFE
+// main.js
 (function(){
 
     // Pseudo-global variables
     var attrArray = ["varA", "varB", "varC", "varD", "varE"];
     var expressed = attrArray[0];
     
-    // Start when window loads
+    // Begin script when window loads
     window.onload = setMap;
     
     function setMap() {
         var width = 960,
             height = 460;
     
-        // Create SVG container
         var map = d3.select("body")
             .append("svg")
             .attr("class", "map")
             .attr("width", width)
             .attr("height", height);
     
-        // Projection centered on Germany
         var projection = d3.geoAlbers()
             .center([10.5, 51])
             .rotate([-10.5, 0])
@@ -29,11 +27,11 @@
     
         var path = d3.geoPath().projection(projection);
     
-        // Load data
         var promises = [
             d3.csv("data/unitsData.csv"),
             d3.json("data/de.topojson")
         ];
+    
         Promise.all(promises).then(callback);
     
         function callback(data) {
@@ -41,21 +39,13 @@
                 germany = data[1];
     
             var geojsonData = topojson.feature(germany, germany.objects.de).features;
-
-            //test
-            console.log("GeoJSON sample:", geojsonData[0].properties);
-
     
-            // Add graticule
             setGraticule(map, path);
     
-            // Join CSV to GeoJSON
             geojsonData = joinData(geojsonData, csvData);
     
-            // Create color scale
             var colorScale = makeColorScale(csvData);
     
-            // Add states to map
             setEnumerationUnits(geojsonData, map, path, colorScale);
         }
     }
@@ -63,12 +53,12 @@
     function setGraticule(map, path) {
         var graticule = d3.geoGraticule().step([5, 5]);
     
-        map.append("path")
+        var gratBackground = map.append("path")
             .datum(graticule.outline())
             .attr("class", "gratBackground")
             .attr("d", path);
     
-        map.selectAll(".gratLines")
+        var gratLines = map.selectAll(".gratLines")
             .data(graticule.lines())
             .enter()
             .append("path")
@@ -76,18 +66,18 @@
             .attr("d", path);
     }
     
-    function joinData(geojsonData, csvData) {
+    function joinData(geojsonData, csvData){
         for (var i = 0; i < csvData.length; i++) {
             var csvRegion = csvData[i];
-            var csvKey = csvRegion.adm1_code;
+            var csvKey = csvRegion.id;
     
             for (var j = 0; j < geojsonData.length; j++) {
-                var geoProps = geojsonData[j].properties;
-                var geoKey = geoProps.adm1_code;
+                var geojsonProps = geojsonData[j].properties;
+                var geojsonKey = geojsonProps.Objectid;
     
-                if (csvKey === geoKey) {
+                if (geojsonKey === csvKey) {
                     attrArray.forEach(function(attr) {
-                        geoProps[attr] = parseFloat(csvRegion[attr]);
+                        geojsonProps[attr] = parseFloat(csvRegion[attr]);
                     });
                 }
             }
@@ -95,7 +85,7 @@
         return geojsonData;
     }
     
-    function makeColorScale(data) {
+    function makeColorScale(data){
         var colorClasses = [
             "#D4B9DA",
             "#C994C7",
@@ -113,22 +103,23 @@
         }
     
         colorScale.domain(domainArray);
+    
         return colorScale;
     }
     
-    function setEnumerationUnits(geojsonData, map, path, colorScale) {
+    function setEnumerationUnits(geojsonData, map, path, colorScale){
         map.selectAll(".state")
             .data(geojsonData)
             .enter()
             .append("path")
             .attr("class", function(d) {
-                return "state " + d.properties.adm1_code;
+                return "state " + d.properties.Objectid;
             })
             .attr("d", path)
-            .style("fill", function(d) {
-                var val = d.properties[expressed];
-                if (val) {
-                    return colorScale(val);
+            .style("fill", function(d){
+                var value = d.properties[expressed];
+                if (value) {
+                    return colorScale(value);
                 } else {
                     return "#ccc";
                 }
@@ -136,4 +127,3 @@
     }
     
     })();
-    
