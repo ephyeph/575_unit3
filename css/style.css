@@ -68,3 +68,7 @@ body {
 .q2-5 { fill: #DF65B0; }
 .q3-5 { fill: #DD1C77; }
 .q4-5 { fill: #980043; }
+
+.no-data {
+    fill: #ccc;
+}
