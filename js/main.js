@@ -148,6 +148,11 @@
             .range([chartInnerHeight, 0]) // Flip so bars grow up
             .domain([0, 100]);
     
+        //test
+        console.log("Drawing bars for:", expressed);
+    csvData.forEach(d => console.log(d.id, d[expressed], colorScale(d[expressed])));
+
+        
         var bars = chart.selectAll(".bar")
             .data(csvData)
             .enter()
@@ -164,10 +169,8 @@
                 var val = parseFloat(d[expressed]);
                 return yScale(val) + topBottomPadding;
             })
-            .style("fill", function(d){
-                var val = parseFloat(d[expressed]);
-                return isNaN(val) ? "#ccc" : colorScale(val);
-            });
+            .style("fill", "#FF0000"
+            );
     
         chart.append("text")
             .attr("x", 40)
