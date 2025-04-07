@@ -162,7 +162,10 @@
             .attr("x", function(d, i){ return i * (chartInnerWidth / csvData.length) + leftPadding; })
             .attr("height", function(d){return chartInnerHeight - yScale(parseFloat(d[expressed]));})
             .attr("y", function(d){ return yScale(parseFloat(d[expressed])) + topBottomPadding; })
-            .style("fill", function(d){ return colorScale(d[expressed]); });
+            .style("fill", function(d){
+                console.log("Bar fill for", d.id, "=", colorScale(d[expressed]));
+                return colorScale(d[expressed]);
+            });
     
         chart.append("text")
             .attr("x", 40)
