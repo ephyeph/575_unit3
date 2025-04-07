@@ -61,5 +61,11 @@ body {
 }
 
 .bar {
-    fill: red !important;
+    stroke: black;
+    stroke-width: 2px;
+    fill: none !important;
+}
+
+.chartBackground{
+    fill: white;
 }
