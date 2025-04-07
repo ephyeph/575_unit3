@@ -66,6 +66,6 @@ body {
     fill: none !important;
 }
 
-.chartBackground{
-    fill: white;
+.chartBackground {
+    fill: white !important
 }
