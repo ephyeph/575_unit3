@@ -64,8 +64,10 @@ body {
     stroke: black;
     stroke-width: 2px;
     fill: none !important;
+    fill-opacity: 1 !important;
+    shape-rendering: crispEdges;
 }
 
 .chartBackground {
-    fill: white !important
+    fill: #f5f5f5 !important
 }
