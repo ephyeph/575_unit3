@@ -169,8 +169,10 @@
                 var val = parseFloat(d[expressed]);
                 return yScale(val) + topBottomPadding;
             })
-            .style("fill", "#FF0000"
-            );
+            .style("fill", function(d){
+                console.log(d.id, d[expressed]); // Confirmed working
+                return "#00ff00"; // Bright lime
+            });
     
         chart.append("text")
             .attr("x", 40)
