@@ -72,11 +72,11 @@
     function joinData(geojsonData, csvData){
         for (var i = 0; i < csvData.length; i++){
             var csvRegion = csvData[i];
-            var csvKey = csvRegion.adm1_code;
+            var csvKey = csvRegion.id;
     
             for (var a = 0; a < geojsonData.length; a++){
                 var geoProps = geojsonData[a].properties;
-                var geoKey = geoProps.adm1_code;
+                var geoKey = geoProps.id;
     
                 if (geoKey === csvKey){
                     attrArray.forEach(function(attr){
@@ -116,7 +116,7 @@
             .enter()
             .append("path")
             .attr("class", function(d){
-                return "state " + d.properties.adm1_code;
+                return "state " + d.properties.id;
             })
             .attr("d", path)
             .style("fill", function(d){
