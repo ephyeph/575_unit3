@@ -145,14 +145,9 @@
             .attr("transform", translate);
     
         var yScale = d3.scaleLinear()
-            .range([chartInnerHeight, 0]) // 
+            .range([chartInnerHeight, 0]) // Flip so bars grow up
             .domain([0, 100]);
-        
     
-        //test
-        console.log("Checking values for expressed:", expressed);
-        csvData.forEach(d => console.log(d.id, d[expressed]));
-
         var bars = chart.selectAll(".bar")
             .data(csvData)
             .enter()
@@ -168,17 +163,17 @@
             .attr("y", function(d){
                 var val = parseFloat(d[expressed]);
                 return yScale(val) + topBottomPadding;
-            });
+            })
             .style("fill", function(d){
-                console.log("Bar fill for", d.id, "=", colorScale(d[expressed]));
-                return colorScale(d[expressed]);
+                var val = parseFloat(d[expressed]);
+                return isNaN(val) ? "#ccc" : colorScale(val);
             });
     
         chart.append("text")
             .attr("x", 40)
             .attr("y", 40)
             .attr("class", "chartTitle")
-            .text("Number of Variable " + expressed[3] + " in each region");
+            .text("Number of " + expressed + " in each region");
     
         var yAxis = d3.axisLeft().scale(yScale);
     
@@ -193,6 +188,7 @@
             .attr("height", chartInnerHeight)
             .attr("transform", translate);
     }
+    
     
     })();
     
