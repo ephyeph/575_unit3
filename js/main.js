@@ -145,7 +145,7 @@
             .attr("transform", translate);
     
         var yScale = d3.scaleLinear()
-            .range([463, 0])
+            .range([chartInnerHeight, 0])
             .domain([0, 100]);
     
         //test
@@ -160,7 +160,7 @@
             .attr("class", function(d){ return "bar " + d.id; })
             .attr("width", chartInnerWidth / csvData.length - 1)
             .attr("x", function(d, i){ return i * (chartInnerWidth / csvData.length) + leftPadding; })
-            .attr("height", function(d){ return 463 - yScale(parseFloat(d[expressed])); })
+            .attr("height", function(d){return chartInnerHeight - yScale(parseFloat(d[expressed]));})
             .attr("y", function(d){ return yScale(parseFloat(d[expressed])) + topBottomPadding; })
             .style("fill", function(d){ return colorScale(d[expressed]); });
     
