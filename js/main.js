@@ -1,15 +1,15 @@
+// Wrap entire script in a self-executing function
 (function(){
 
     // Pseudo-global variables
     var attrArray = ["varA", "varB", "varC", "varD", "varE"];
     var expressed = attrArray[0];
     
-    // Start the script
     window.onload = setMap;
     
     function setMap(){
-        var width = 960,
-            height = 500;
+        var width = window.innerWidth * 0.5,
+            height = 460;
     
         var map = d3.select("body")
             .append("svg")
@@ -34,22 +34,20 @@
         Promise.all(promises).then(callback);
     
         function callback(data){
-            var csvData = data[0], topoData = data[1];
+            var csvData = data[0],
+                germany = data[1];
     
-            // Graticule
-            setGraticule(map, path);
+            var geojsonData = topojson.feature(germany, germany.objects.de).features;
     
-            // Convert to GeoJSON
-            var germanyRegions = topojson.feature(topoData, topoData.objects.de).features;
-    
-            // Join data
-            germanyRegions = joinData(germanyRegions, csvData);
-    
-            // Create color scale
             var colorScale = makeColorScale(csvData);
     
-            // Draw regions
-            setEnumerationUnits(germanyRegions, map, path, colorScale);
+            setGraticule(map, path);
+    
+            geojsonData = joinData(geojsonData, csvData);
+    
+            setEnumerationUnits(geojsonData, map, path, colorScale);
+    
+            setChart(csvData, colorScale);
         }
     }
     
@@ -71,17 +69,17 @@
     
     function joinData(geojsonData, csvData){
         for (var i = 0; i < csvData.length; i++){
-            var csvRegion = csvData[i];
-            var csvKey = csvRegion.id;
+            var csvRegion = csvData[i],
+                csvKey = csvRegion.id;
     
-            for (var a = 0; a < geojsonData.length; a++){
-                var geoProps = geojsonData[a].properties;
-                var geoKey = geoProps.id;
+            for (var j = 0; j < geojsonData.length; j++){
+                var geojsonProps = geojsonData[j].properties,
+                    geojsonKey = geojsonProps.id;
     
-                if (geoKey === csvKey){
+                if (geojsonKey === csvKey){
                     attrArray.forEach(function(attr){
                         var val = parseFloat(csvRegion[attr]);
-                        geoProps[attr] = val;
+                        geojsonProps[attr] = val;
                     });
                 }
             }
@@ -101,12 +99,13 @@
         var colorScale = d3.scaleQuantile().range(colorClasses);
     
         var domainArray = [];
-        for (var i=0; i<data.length; i++){
+        for (var i = 0; i < data.length; i++){
             var val = parseFloat(data[i][expressed]);
             if (!isNaN(val)) domainArray.push(val);
         }
     
         colorScale.domain(domainArray);
+    
         return colorScale;
     }
     
@@ -115,14 +114,70 @@
             .data(geojsonData)
             .enter()
             .append("path")
-            .attr("class", function(d){
-                return "state " + d.properties.id;
-            })
+            .attr("class", function(d){ return "state " + d.properties.id; })
             .attr("d", path)
             .style("fill", function(d){
                 var value = d.properties[expressed];
                 return value ? colorScale(value) : "#ccc";
             });
+    }
+    
+    function setChart(csvData, colorScale){
+        var chartWidth = window.innerWidth * 0.425,
+            chartHeight = 473,
+            leftPadding = 25,
+            rightPadding = 2,
+            topBottomPadding = 5,
+            chartInnerWidth = chartWidth - leftPadding - rightPadding,
+            chartInnerHeight = chartHeight - topBottomPadding * 2,
+            translate = "translate(" + leftPadding + "," + topBottomPadding + ")";
+    
+        var chart = d3.select("body")
+            .append("svg")
+            .attr("width", chartWidth)
+            .attr("height", chartHeight)
+            .attr("class", "chart");
+    
+        chart.append("rect")
+            .attr("class", "chartBackground")
+            .attr("width", chartInnerWidth)
+            .attr("height", chartInnerHeight)
+            .attr("transform", translate);
+    
+        var yScale = d3.scaleLinear()
+            .range([463, 0])
+            .domain([0, 100]);
+    
+        var bars = chart.selectAll(".bar")
+            .data(csvData)
+            .enter()
+            .append("rect")
+            .sort(function(a, b){ return b[expressed] - a[expressed]; })
+            .attr("class", function(d){ return "bar " + d.id; })
+            .attr("width", chartInnerWidth / csvData.length - 1)
+            .attr("x", function(d, i){ return i * (chartInnerWidth / csvData.length) + leftPadding; })
+            .attr("height", function(d){ return 463 - yScale(parseFloat(d[expressed])); })
+            .attr("y", function(d){ return yScale(parseFloat(d[expressed])) + topBottomPadding; })
+            .style("fill", function(d){ return colorScale(d[expressed]); });
+    
+        chart.append("text")
+            .attr("x", 40)
+            .attr("y", 40)
+            .attr("class", "chartTitle")
+            .text("Number of Variable " + expressed[3] + " in each region");
+    
+        var yAxis = d3.axisLeft().scale(yScale);
+    
+        chart.append("g")
+            .attr("class", "axis")
+            .attr("transform", translate)
+            .call(yAxis);
+    
+        chart.append("rect")
+            .attr("class", "chartFrame")
+            .attr("width", chartInnerWidth)
+            .attr("height", chartInnerHeight)
+            .attr("transform", translate);
     }
     
     })();
