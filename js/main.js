@@ -1,16 +1,15 @@
-// main.js
 (function(){
 
     // Pseudo-global variables
     var attrArray = ["varA", "varB", "varC", "varD", "varE"];
     var expressed = attrArray[0];
     
-    // Begin script when window loads
+    // Start the script
     window.onload = setMap;
     
-    function setMap() {
+    function setMap(){
         var width = 960,
-            height = 460;
+            height = 500;
     
         var map = d3.select("body")
             .append("svg")
@@ -34,31 +33,35 @@
     
         Promise.all(promises).then(callback);
     
-        function callback(data) {
-            var csvData = data[0],
-                germany = data[1];
+        function callback(data){
+            var csvData = data[0], topoData = data[1];
     
-            var geojsonData = topojson.feature(germany, germany.objects.de).features;
-    
+            // Graticule
             setGraticule(map, path);
     
-            geojsonData = joinData(geojsonData, csvData);
+            // Convert to GeoJSON
+            var germanyRegions = topojson.feature(topoData, topoData.objects.de).features;
     
+            // Join data
+            germanyRegions = joinData(germanyRegions, csvData);
+    
+            // Create color scale
             var colorScale = makeColorScale(csvData);
     
-            setEnumerationUnits(geojsonData, map, path, colorScale);
+            // Draw regions
+            setEnumerationUnits(germanyRegions, map, path, colorScale);
         }
     }
     
-    function setGraticule(map, path) {
+    function setGraticule(map, path){
         var graticule = d3.geoGraticule().step([5, 5]);
     
-        var gratBackground = map.append("path")
+        map.append("path")
             .datum(graticule.outline())
             .attr("class", "gratBackground")
             .attr("d", path);
     
-        var gratLines = map.selectAll(".gratLines")
+        map.selectAll(".gratLines")
             .data(graticule.lines())
             .enter()
             .append("path")
@@ -67,17 +70,18 @@
     }
     
     function joinData(geojsonData, csvData){
-        for (var i = 0; i < csvData.length; i++) {
+        for (var i = 0; i < csvData.length; i++){
             var csvRegion = csvData[i];
-            var csvKey = csvRegion.id;
+            var csvKey = csvRegion.adm1_code;
     
-            for (var j = 0; j < geojsonData.length; j++) {
-                var geojsonProps = geojsonData[j].properties;
-                var geojsonKey = geojsonProps.Objectid;
+            for (var a = 0; a < geojsonData.length; a++){
+                var geoProps = geojsonData[a].properties;
+                var geoKey = geoProps.adm1_code;
     
-                if (geojsonKey === csvKey) {
-                    attrArray.forEach(function(attr) {
-                        geojsonProps[attr] = parseFloat(csvRegion[attr]);
+                if (geoKey === csvKey){
+                    attrArray.forEach(function(attr){
+                        var val = parseFloat(csvRegion[attr]);
+                        geoProps[attr] = val;
                     });
                 }
             }
@@ -97,33 +101,29 @@
         var colorScale = d3.scaleQuantile().range(colorClasses);
     
         var domainArray = [];
-        for (var i = 0; i < data.length; i++) {
+        for (var i=0; i<data.length; i++){
             var val = parseFloat(data[i][expressed]);
-            domainArray.push(val);
+            if (!isNaN(val)) domainArray.push(val);
         }
     
         colorScale.domain(domainArray);
-    
         return colorScale;
     }
     
     function setEnumerationUnits(geojsonData, map, path, colorScale){
-        map.selectAll(".region")
+        map.selectAll(".state")
             .data(geojsonData)
             .enter()
             .append("path")
-            .attr("class", function(d) {
-                return "region" + d.properties.Objectid;
+            .attr("class", function(d){
+                return "state " + d.properties.adm1_code;
             })
             .attr("d", path)
             .style("fill", function(d){
                 var value = d.properties[expressed];
-                if (value) {
-                    return colorScale(value);
-                } else {
-                    return "#ccc";
-                }
+                return value ? colorScale(value) : "#ccc";
             });
     }
     
     })();
+    
