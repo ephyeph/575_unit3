@@ -148,6 +148,10 @@
             .range([463, 0])
             .domain([0, 100]);
     
+        //test
+        console.log("Checking values for expressed:", expressed);
+        csvData.forEach(d => console.log(d.id, d[expressed]));
+
         var bars = chart.selectAll(".bar")
             .data(csvData)
             .enter()
